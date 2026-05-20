@@ -1,14 +1,9 @@
-// --- 1. Variables & State Storage ---
 const hexCharacters = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"];
 const isCardLocked = [false, false, false, false, false];
 
-// --- 2. DOM Elements ---
 const generateBtn = document.getElementById("generate-btn");
 const themeToggleBtn = document.getElementById("theme-toggle-btn");
 
-// --- 3. Core Functions ---
-
-// Generates a single random 6-character HEX code string
 function createRandomHexCode() {
   let hexCode = "#";
   for (let i = 0; i < 6; i++) {
@@ -18,28 +13,23 @@ function createRandomHexCode() {
   return hexCode;
 }
 
-// Loops through all 5 cards and updates untoggled ones with new colors
 function updatePaletteColors() {
   for (let i = 0; i < 5; i++) {
     if (isCardLocked[i] === false) {
       const newColor = createRandomHexCode();
-      
       const displayBlock = document.getElementById("color-" + i);
       const textLabel = document.getElementById("hex-" + i);
-
       displayBlock.style.backgroundColor = newColor;
       textLabel.innerText = newColor;
     }
   }
 }
 
-// Handles the clipboard copy mechanics and UI notification text swapping
 function copyTextToClipboard(cardIndex) {
   const textLabel = document.getElementById("hex-" + cardIndex);
   const copyBtn = document.getElementById("copy-" + cardIndex);
   const originalHexText = textLabel.innerText;
 
-  // Use the browser standard input copy trick to keep it beginner level
   const secretInput = document.createElement("input");
   secretInput.value = originalHexText;
   document.body.appendChild(secretInput);
@@ -47,17 +37,14 @@ function copyTextToClipboard(cardIndex) {
   document.execCommand("copy");
   document.body.removeChild(secretInput);
 
-  // Success alert feedback switch
   copyBtn.innerText = "✅ Copied!";
   setTimeout(function() {
     copyBtn.innerText = "📋 Copy";
   }, 1200);
 }
 
-// Toggles the state tracking array and updates button UI text
 function toggleCardLock(cardIndex) {
   const lockBtn = document.getElementById("lock-" + cardIndex);
-  
   if (isCardLocked[cardIndex] === false) {
     isCardLocked[cardIndex] = true;
     lockBtn.innerText = "🔒 Locked";
@@ -67,7 +54,6 @@ function toggleCardLock(cardIndex) {
   }
 }
 
-// Reads saved theme choice or defaults layout view structure colors
 function initializeTheme() {
   const currentSavedTheme = localStorage.getItem("user-theme");
   if (currentSavedTheme === "dark") {
@@ -79,13 +65,10 @@ function initializeTheme() {
   }
 }
 
-// --- 4. Event Listeners Setup ---
-
 generateBtn.addEventListener("click", updatePaletteColors);
 
 themeToggleBtn.addEventListener("click", function() {
   const activeTheme = document.documentElement.getAttribute("data-theme");
-  
   if (activeTheme === "dark") {
     document.documentElement.setAttribute("data-theme", "light");
     themeToggleBtn.innerText = "🌙 Dark Mode";
@@ -97,7 +80,6 @@ themeToggleBtn.addEventListener("click", function() {
   }
 });
 
-// Setting up independent listener hooks for each card index explicitly without closures
 for (let index = 0; index < 5; index++) {
   const currentCopyBtn = document.getElementById("copy-" + index);
   const currentLockBtn = document.getElementById("lock-" + index);
@@ -111,6 +93,5 @@ for (let index = 0; index < 5; index++) {
   });
 }
 
-// --- 5. Application Launch ---
 initializeTheme();
 updatePaletteColors();
